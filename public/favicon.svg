@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Background Circle -->
+  <circle cx="32" cy="32" r="30" fill="#1e40af"/>
+
+  <!-- Car Body -->
+  <path d="M16 35 L20 28 L26 25 L38 25 L44 28 L48 35 L48 42 L16 42 Z" fill="#ffffff"/>
+
+  <!-- Car Windows -->
+  <path d="M24 28 L28 26 L36 26 L40 28 L38 32 L26 32 Z" fill="#60a5fa"/>
+
+  <!-- Left Wheel -->
+  <circle cx="22" cy="42" r="4" fill="#1f2937"/>
+  <circle cx="22" cy="42" r="2" fill="#9ca3af"/>
+
+  <!-- Right Wheel -->
+  <circle cx="42" cy="42" r="4" fill="#1f2937"/>
+  <circle cx="42" cy="42" r="2" fill="#9ca3af"/>
+
+  <!-- Car Details -->
+  <rect x="30" y="35" width="4" height="3" fill="#60a5fa"/>
+  <circle cx="18" cy="37" r="1.5" fill="#fbbf24"/>
+</svg>

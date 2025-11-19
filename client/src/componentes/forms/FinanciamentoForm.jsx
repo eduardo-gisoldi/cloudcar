@@ -217,35 +217,32 @@ const FinanciamentoForm = ({ vehicleId, vehicleName, vehiclePrice = 0 }) => {
     setIsSubmitting(true);
 
     try {
-      // Aqui você fará a chamada para o backend
-      // Exemplo:
-      // const response = await fetch('http://localhost:3000/api/financiamento', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     ...formData,
-      //     cpf: formData.cpf.replace(/\D/g, ''),
-      //     telefone: formData.telefone.replace(/\D/g, ''),
-      //     simulacao: simulacao
-      //   })
-      // });
-      //
-      // if (!response.ok) {
-      //   throw new Error('Erro ao enviar simulação');
-      // }
+      const { createCliente, createFinanciamento } = await import('../../services/api');
 
-      // Simulação de envio (remover quando integrar com backend)
-      await new Promise(resolve => setTimeout(resolve, 1500));
-
-      console.log('Dados da simulação para enviar ao backend:', {
-        ...formData,
-        cpf: formData.cpf.replace(/\D/g, ''),
+      // 1. Criar ou buscar o cliente
+      const clienteData = {
+        nome: formData.nome,
+        email: formData.email,
         telefone: formData.telefone.replace(/\D/g, ''),
-        simulacao: simulacao
-      });
+        cpf: formData.cpf.replace(/\D/g, ''),
+        cidade: null, // Financiamento não pede cidade
+        estado: null,
+        renda: parseFloat(formData.rendaMensal)
+      };
 
+      const cliente = await createCliente(clienteData);
+
+      // 2. Criar o financiamento
+      const financiamentoData = {
+        clienteId: cliente.id,
+        valorVeiculo: parseFloat(formData.valorVeiculo),
+        valorEntrada: parseFloat(formData.valorEntrada),
+        parcelas: parseInt(formData.numeroParcelas)
+      };
+
+      await createFinanciamento(financiamentoData);
+
+      console.log('Financiamento simulado com sucesso!');
       setSubmitSuccess(true);
 
       // Limpa o formulário

@@ -151,72 +151,72 @@ const TestDriveForm = ({ vehicleId, vehicleName }) => {
     }
   };
 
-  // Submit do formulário
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+// Submit do formulário
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
+  if (!validateForm()) {
+    return;
+  }
 
-    setIsSubmitting(true);
+  setIsSubmitting(true);
 
-    try {
-      // Aqui você fará a chamada para o backend
-      // Exemplo:
-      // const response = await fetch('http://localhost:3000/api/test-drive', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     ...formData,
-      //     cpf: formData.cpf.replace(/\D/g, ''),
-      //     telefone: formData.telefone.replace(/\D/g, '')
-      //   })
-      // });
-      //
-      // if (!response.ok) {
-      //   throw new Error('Erro ao agendar test drive');
-      // }
+  try {
+    // Importar a função do serviço no topo do arquivo
+    const { createTestDrive, createCliente } = await import('../../services/api');
 
-      // Simulação de envio (remover quando integrar com backend)
-      await new Promise(resolve => setTimeout(resolve, 1500));
+    // 1. Primeiro, criar ou buscar o cliente
+    const clienteData = {
+      nome: formData.nome,
+      email: formData.email,
+      telefone: formData.telefone.replace(/\D/g, ''), // Remove formatação
+      cpf: formData.cpf.replace(/\D/g, ''), // Remove formatação
+      cidade: formData.cidade,
+      estado: formData.estado,
+      renda: null // Test drive não tem renda
+    };
 
-      console.log('Dados do formulário para enviar ao backend:', {
-        ...formData,
-        cpf: formData.cpf.replace(/\D/g, ''),
-        telefone: formData.telefone.replace(/\D/g, '')
-      });
+    const cliente = await createCliente(clienteData);
 
-      setSubmitSuccess(true);
+    // 2. Depois, criar o test drive vinculado ao cliente
+    const testDriveData = {
+      clienteId: cliente.id,
+      data: formData.dataPreferencial,
+      horario: formData.horarioPreferencial,
+      mensagem: formData.mensagem
+    };
 
-      // Limpa o formulário
-      setFormData({
-        nome: '',
-        email: '',
-        telefone: '',
-        cpf: '',
-        cidade: '',
-        estado: '',
-        dataPreferencial: '',
-        horarioPreferencial: '',
-        veiculoId: vehicleId || '',
-        mensagem: ''
-      });
+    await createTestDrive(testDriveData);
 
-      // Oculta mensagem de sucesso após 5 segundos
-      setTimeout(() => {
-        setSubmitSuccess(false);
-      }, 5000);
+    console.log('Test drive agendado com sucesso!');
+    setSubmitSuccess(true);
 
-    } catch (error) {
-      console.error('Erro ao enviar formulário:', error);
-      setErrors({ submit: 'Erro ao agendar test drive. Tente novamente.' });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    // Limpa o formulário
+    setFormData({
+      nome: '',
+      email: '',
+      telefone: '',
+      cpf: '',
+      cidade: '',
+      estado: '',
+      dataPreferencial: '',
+      horarioPreferencial: '',
+      veiculoId: vehicleId || '',
+      mensagem: ''
+    });
+
+    // Oculta mensagem de sucesso após 5 segundos
+    setTimeout(() => {
+      setSubmitSuccess(false);
+    }, 5000);
+
+  } catch (error) {
+    console.error('Erro ao enviar formulário:', error);
+    setErrors({ submit: 'Erro ao agendar test drive. Tente novamente.' });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const estados = [
     'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA',

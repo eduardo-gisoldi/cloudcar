@@ -8,7 +8,7 @@ app.use(express.json());
 
 // permitir que o React (porta 3000) se conecte a este servidor
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   next();
@@ -199,6 +199,7 @@ app.get('/api/clientes', async (req, res) => {
   }
 });
 
+
 // Buscar um cliente específico por ID
 app.get('/api/clientes/:id', async (req, res) => {
   try {
@@ -209,6 +210,30 @@ app.get('/api/clientes/:id', async (req, res) => {
     res.json(cliente);
   } catch (error) {
     res.status(500).json({ erro: error.message });
+  }
+});
+
+// Buscar cliente por CPF ou criar novo (para formulários)
+app.post('/api/clientes/buscar-ou-criar', async (req, res) => {
+  try {
+    const { nome, email, telefone, cpf, cidade, estado, renda } = req.body;
+
+    // Buscar cliente existente por CPF
+    let cliente = await Cliente.findOne({ where: { cpf } });
+
+    // Se não existir, criar novo
+    if (!cliente) {
+      cliente = await Cliente.create({
+        nome, email, telefone, cpf, cidade, estado, renda
+      });
+    } else {
+      // Se existir, atualizar dados (opcional)
+      await cliente.update({ nome, email, telefone, cidade, estado, renda });
+    }
+
+    res.json(cliente);
+  } catch (error) {
+    res.status(400).json({ erro: error.message });
   }
 });
 

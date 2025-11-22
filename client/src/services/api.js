@@ -21,14 +21,14 @@ export const getClientes = async () => {
 
 export const createCliente = async (clienteData) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/clientes`, {
+    const response = await fetch(`${API_BASE_URL}/clientes/buscar-ou-criar`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(clienteData),
     });
-    if (!response.ok) throw new Error('Erro ao criar cliente');
+    if (!response.ok) throw new Error('Erro ao criar/buscar cliente');
     return await response.json();
   } catch (error) {
     console.error('Erro:', error);

@@ -1,0 +1,20 @@
+# Imagem base
+FROM node:18-alpine
+
+# Pasta de trabalho dentro do container
+WORKDIR /app
+
+# Copia apenas os arquivos de dependências primeiro 
+COPY package*.json ./
+
+# Instala as dependências
+RUN npm install
+
+# Copia o resto do código
+COPY . .
+
+# Porta interna que o app usa (5000)
+EXPOSE 5000
+
+# Comando para iniciar o servidor
+CMD ["node", "server.js"]
